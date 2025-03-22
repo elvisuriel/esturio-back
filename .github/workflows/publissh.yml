@@ -99,15 +99,15 @@ jobs:
           mv docker-compose-production.yml esturio-backend/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
-        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh && chmod 400 my_ssh
+        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh_key && chmod 400 my_ssh_key
 
       - name: Copy files to server
         run: |
-          sshpass scp -i my_ssh -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i my_ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -i my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose down; \
@@ -139,15 +139,15 @@ jobs:
           mv docker-compose-dev.yml esturio-backend-dev/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
-        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh && chmod 400 my_ssh
+        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh_key && chmod 400 my_ssh_key
 
       - name: Copy files to server
         run: |
-          sshpass scp -i my_ssh -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i my_ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -i my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend-dev; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:dev; \
            sudo docker-compose down; \
