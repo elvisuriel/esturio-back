@@ -114,7 +114,7 @@ jobs:
            sudo docker image rm ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose up -d;"
 
-  # Job to deploy the application to development (testing)
+  # Job to deploy the application to development (dev)
   deploy_dev:
     name: Deploy to Development (Testing)
     runs-on: ubuntu-latest
