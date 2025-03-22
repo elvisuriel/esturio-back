@@ -26,6 +26,7 @@ jobs:
 
       - name: Add environment variables to .env
         run: |
+          # For Production (master branch)
           if [ "${GITHUB_REF}" == "refs/heads/master" ]; then
             echo "Setting production variables"
             echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
@@ -39,6 +40,7 @@ jobs:
             echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
           fi
 
+          # For Development (dev branch)
           if [ "${GITHUB_REF}" == "refs/heads/dev" ]; then
             echo DEV_API_URL=${{ secrets.DEV_API_URL }} >> .env
             echo DEV_S3_BUCKET_NAME=${{ secrets.DEV_S3_BUCKET_NAME }} >> .env
@@ -82,7 +84,7 @@ jobs:
 
       - name: Set up deployment directory
         run: |
-          mkdir -p ~/.ssh
+          mkdir -p ~/.ssh  # Create .ssh directory if it doesn't exist
           mkdir esturio-backend
           chmod +x esturio-backend
           mv docker-compose-production.yml esturio-backend/docker-compose.yml
@@ -124,7 +126,7 @@ jobs:
 
       - name: Set up deployment directory
         run: |
-          mkdir -p ~/.ssh
+          mkdir -p ~/.ssh  # Create .ssh directory if it doesn't exist
           mkdir esturio-backend-dev
           chmod +x esturio-backend-dev
           mv docker-compose-dev.yml esturio-backend-dev/docker-compose.yml
