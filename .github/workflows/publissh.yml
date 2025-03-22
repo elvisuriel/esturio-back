@@ -88,18 +88,18 @@ jobs:
           chmod +x esturio-backend
           mv docker-compose-production.yml esturio-backend/docker-compose.yml
 
-      - name: Save SSH Key to file
+      - name: Use SSH Key for deployment
         run: |
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/my_ssh_key
-          chmod 400 ~/.ssh/my_ssh_key
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
 
       - name: Copy files to server
         run: |
-          sshpass scp -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose down; \
@@ -130,18 +130,18 @@ jobs:
           chmod +x esturio-backend-dev
           mv docker-compose-dev.yml esturio-backend-dev/docker-compose.yml
 
-      - name: Save SSH Key to file
+      - name: Use SSH Key for deployment
         run: |
-          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/my_ssh_key
-          chmod 400 ~/.ssh/my_ssh_key
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 400 ~/.ssh/id_rsa
 
       - name: Copy files to server
         run: |
-          sshpass scp -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend-dev; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:dev; \
            sudo docker-compose down; \
