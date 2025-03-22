@@ -3,8 +3,8 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - masterr
-      - devr
+      - master
+      - dev
 
 jobs:
   build_docker_image:
@@ -66,22 +66,22 @@ jobs:
       # Build Docker image for production
       - name: Build Production Docker image
         if: github.ref == 'refs/heads/master'
-        run: docker build --build-arg env_name=production --build-arg env_port=8080 -t ghcr.io/intuition-business/oncater/backend:production .
+        run: docker build --build-arg env_name=production --build-arg env_port=3001 -t ghcr.io/Branak/esturio/backend:production .
 
       # Build Docker image for development
       - name: Build Development Docker image
         if: github.ref == 'refs/heads/dev'
-        run: docker build --build-arg env_name=dev --build-arg env_port=8081 -t ghcr.io/intuition-business/oncater/backend:dev .
+        run: docker build --build-arg env_name=dev --build-arg env_port=3002 -t ghcr.io/Branak/esturio/backend:dev .
 
       # Push Production Docker image to registry
       - name: Push Production Docker image to registry
         if: github.ref == 'refs/heads/master'
-        run: docker push ghcr.io/intuition-business/oncater/backend:production
+        run: docker push ghcr.io/Branak/esturio/backend:production
 
       # Push Development Docker image to registry
       - name: Push Development Docker image to registry
         if: github.ref == 'refs/heads/dev'
-        run: docker push ghcr.io/intuition-business/oncater/backend:dev
+        run: docker push ghcr.io/Branak/esturio/backend:dev
 
   # Job to deploy the application to production
   deploy_production:
@@ -103,24 +103,24 @@ jobs:
 
       - name: Set up deployment directory
         run: |
-          mkdir oncater-backend
-          chmod +x oncater-backend
-          mv docker-compose-production.yml oncater-backend/docker-compose.yml
+          mkdir esturio-backend
+          chmod +x esturio-backend
+          mv docker-compose-production.yml esturio-backend/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
         run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh && chmod 400 my_ssh
 
       - name: Copy files to server
         run: |
-          sshpass scp -i my_ssh -o StrictHostKeyChecking=no -r oncater-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i my_ssh -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
           sshpass ssh -i my_ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
-          "cd /home/ubuntu/oncater-backend; \
-           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/intuition-business/oncater/backend:production; \
+          "cd /home/ubuntu/esturio-backend; \
+           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/Branak/esturio/backend:production; \
            sudo docker-compose down; \
-           sudo docker image rm ghcr.io/intuition-business/oncater/backend:production; \
+           sudo docker image rm ghcr.io/Branak/esturio/backend:production; \
            sudo docker-compose up -d;"
 
   # Job to deploy the application to development (testing)
@@ -143,9 +143,9 @@ jobs:
 
       - name: Set up deployment directory
         run: |
-          mkdir oncater-backend-dev
-          chmod +x oncater-backend-dev
-          mv docker-compose-dev.yml oncater-backend-dev/docker-compose.yml
+          mkdir esturio-backend-dev
+          chmod +x esturio-backend-dev
+          mv docker-compose-dev.yml esturio-backend-dev/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
         run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh && chmod 400 my_ssh
@@ -157,8 +157,8 @@ jobs:
       - name: SSH and deploy
         run: |
           sshpass ssh -i my_ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
-          "cd /home/ubuntu/oncater-backend-dev; \
-           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/intuition-business/oncater/backend:dev; \
+          "cd /home/ubuntu/esturio-backend-dev; \
+           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/Branak/esturio/backend:dev; \
            sudo docker-compose down; \
-           sudo docker image rm ghcr.io/intuition-business/oncater/backend:dev; \
+           sudo docker image rm ghcr.io/Branak/esturio/backend:dev; \
            sudo docker-compose up -d;"
