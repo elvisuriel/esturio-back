@@ -8,7 +8,7 @@ import routes from "./routes/index.js";
 import setupWebSocket from "./sockets/socket.js";
 
 dotenv.config();
-const PORT = process.env.PORT || 4005;
+const PORT = process.env.PORT || 3001;
 const app = express();
 const server = http.createServer(app);
 
