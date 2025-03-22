@@ -47,9 +47,6 @@ jobs:
             echo DEV_S3_BUCKET_NAME=*** >> .env
           fi
 
-          # Common environment variables for both
-          
-
       # Validate .env file contents
       - name: Print .env file contents for debugging
         run: cat .env
@@ -79,7 +76,7 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     needs: build_docker_image
-    if: github.ref == 'refs/heads/master'  # Only for the master branch
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -99,15 +96,15 @@ jobs:
           mv docker-compose-production.yml esturio-backend/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
-        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh_key && chmod 400 my_ssh_key
+        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > ~/.ssh/my_ssh_key && chmod 400 ~/.ssh/my_ssh_key
 
       - name: Copy files to server
         run: |
-          sshpass scp -i my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose down; \
@@ -119,7 +116,7 @@ jobs:
     name: Deploy to Development (Testing)
     runs-on: ubuntu-latest
     needs: build_docker_image
-    if: github.ref == 'refs/heads/dev'  # Only for the dev branch
+    if: github.ref == 'refs/heads/dev'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -139,15 +136,15 @@ jobs:
           mv docker-compose-dev.yml esturio-backend-dev/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
-        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > my_ssh_key && chmod 400 my_ssh_key
+        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > ~/.ssh/my_ssh_key && chmod 400 ~/.ssh/my_ssh_key
 
       - name: Copy files to server
         run: |
-          sshpass scp -i my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -i ~/.ssh/my_ssh_key -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend-dev; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:dev; \
            sudo docker-compose down; \
