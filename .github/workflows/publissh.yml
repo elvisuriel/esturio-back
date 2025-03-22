@@ -91,12 +91,15 @@ jobs:
 
       - name: Set up deployment directory
         run: |
+          mkdir -p ~/.ssh  # Create .ssh directory if it doesn't exist
           mkdir esturio-backend
           chmod +x esturio-backend
           mv docker-compose-production.yml esturio-backend/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
-        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > ~/.ssh/my_ssh_key && chmod 400 ~/.ssh/my_ssh_key
+        run: |
+          echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > ~/.ssh/my_ssh_key
+          chmod 400 ~/.ssh/my_ssh_key
 
       - name: Copy files to server
         run: |
@@ -131,12 +134,15 @@ jobs:
 
       - name: Set up deployment directory
         run: |
+          mkdir -p ~/.ssh  # Create .ssh directory if it doesn't exist
           mkdir esturio-backend-dev
           chmod +x esturio-backend-dev
           mv docker-compose-dev.yml esturio-backend-dev/docker-compose.yml
 
       - name: Decode SSH Key and set permissions
-        run: echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > ~/.ssh/my_ssh_key && chmod 400 ~/.ssh/my_ssh_key
+        run: |
+          echo "${{ secrets.SERVER_SSH_KEY }}" | base64 -d > ~/.ssh/my_ssh_key
+          chmod 400 ~/.ssh/my_ssh_key
 
       - name: Copy files to server
         run: |
