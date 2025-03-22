@@ -43,6 +43,8 @@ jobs:
 
           # For Development (dev branch)
           if [ "${GITHUB_REF}" == "refs/heads/dev" ]; then
+            echo DEV_API_URL=*** >> .env
+            echo DEV_S3_BUCKET_NAME=*** >> .env
           fi
 
           # Common environment variables for both
