@@ -1,5 +1,5 @@
 services:
-  oncater_backend:
+  esturio_backend:
     image: ghcr.io/elvisuriel/esturio-back:production
     mem_limit: 1G
     mem_reservation: 512M
