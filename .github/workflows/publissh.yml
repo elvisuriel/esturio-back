@@ -57,22 +57,22 @@ jobs:
       # Build Docker image for production
       - name: Build Production Docker image
         if: github.ref == 'refs/heads/master'
-        run: docker build --build-arg env_name=production --build-arg env_port=3001 -t ghcr.io/Branak/esturio/backend:production .
+        run: docker build --build-arg env_name=production --build-arg env_port=3001 -t ghcr.io/elvisuriel/esturio-back:production .
 
       # Build Docker image for development
       - name: Build Development Docker image
         if: github.ref == 'refs/heads/dev'
-        run: docker build --build-arg env_name=dev --build-arg env_port=3002 -t ghcr.io/Branak/esturio/backend:dev .
+        run: docker build --build-arg env_name=dev --build-arg env_port=3002 -t ghcr.io/elvisuriel/esturio-back:dev .
 
       # Push Production Docker image to registry
       - name: Push Production Docker image to registry
         if: github.ref == 'refs/heads/master'
-        run: docker push ghcr.io/Branak/esturio/backend:production
+        run: docker push ghcr.io/elvisuriel/esturio-back:production
 
       # Push Development Docker image to registry
       - name: Push Development Docker image to registry
         if: github.ref == 'refs/heads/dev'
-        run: docker push ghcr.io/Branak/esturio/backend:dev
+        run: docker push ghcr.io/elvisuriel/esturio-back:dev
 
   # Job to deploy the application to production
   deploy_production:
@@ -109,9 +109,9 @@ jobs:
         run: |
           sshpass ssh -i my_ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend; \
-           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/Branak/esturio/backend:production; \
+           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose down; \
-           sudo docker image rm ghcr.io/Branak/esturio/backend:production; \
+           sudo docker image rm ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose up -d;"
 
   # Job to deploy the application to development (testing)
@@ -143,13 +143,13 @@ jobs:
 
       - name: Copy files to server
         run: |
-          sshpass scp -i my_ssh -o StrictHostKeyChecking=no -r oncater-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
+          sshpass scp -i my_ssh -o StrictHostKeyChecking=no -r esturio-backend-dev ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
 
       - name: SSH and deploy
         run: |
           sshpass ssh -i my_ssh -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend-dev; \
-           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/Branak/esturio/backend:dev; \
+           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:dev; \
            sudo docker-compose down; \
-           sudo docker image rm ghcr.io/Branak/esturio/backend:dev; \
+           sudo docker image rm ghcr.io/elvisuriel/esturio-back:dev; \
            sudo docker-compose up -d;"
