@@ -30,34 +30,23 @@ jobs:
           # For Production (master branch)
           if [ "${GITHUB_REF}" == "refs/heads/master" ]; then
             echo "Setting production variables"
-            echo DB_CNN=${{ secrets.DB_CNN }} >> .env
+            echo AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} >> .env
             echo PORT=${{ secrets.PORT }} >> .env
-            echo ENV_PROD=${{ secrets.ENV_PROD }} >> .env
-            echo DOORDASH_ID=${{ secrets.DOORDASH_ID }} >> .env
-            echo PAYMENT=${{ secrets.PAYMENT }} >> .env
-            echo DOORDASH_KEYID=${{ secrets.DOORDASH_KEYID }} >> .env
-            echo DOORDASH_SECRET=${{ secrets.DOORDASH_SECRET }} >> .env
+            echo AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} >> .env
+            echo AWS_REGION=${{ secrets.AWS_REGION }} >> .env
+            echo S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }} >> .env
+            echo TABLE_TEACHERS_PORTAL=${{ secrets.TABLE_TEACHERS_PORTAL }} >> .env
+            echo COGNITO_CLIENT_ID=${{ secrets.COGNITO_CLIENT_ID }} >> .env
+            echo COGNITO_USER_POOL_ID=${{ secrets.COGNITO_USER_POOL_ID }} >> .env
+            echo JWT_SECRET=${{ secrets.JWT_SECRET }} >> .env
           fi
 
           # For Development (dev branch)
           if [ "${GITHUB_REF}" == "refs/heads/dev" ]; then
-            echo "Setting development variables"
-            echo DB_CNN=${{ secrets.DB_CNN_DEV }} >> .env
-            echo PORT=${{ secrets.PORT_DEV }} >> .env
-            echo ENV_PROD=${{ secrets.ENV_PROD_DEV }} >> .env
-            echo DOORDASH_ID=${{ secrets.DOORDASH_ID_DEV }} >> .env
-            echo PAYMENT=${{ secrets.PAYMENT_DEV }} >> .env
-            echo DOORDASH_KEYID=${{ secrets.DOORDASH_KEYID_DEV }} >> .env
-            echo DOORDASH_SECRET=${{ secrets.DOORDASH_SECRET_DEV }} >> .env
           fi
 
           # Common environment variables for both
-          echo SECRET=${{ secrets.SECRET }} >> .env
-          echo SECRET_JWT_SEED=${{ secrets.SECRET_JWT_SEED }} >> .env
-          echo ACC_TWILIO=${{ secrets.ACC_TWILIO }} >> .env
-          echo TOKEN_TWILIO=${{ secrets.TOKEN_TWILIO }} >> .env
-          echo SERVER_IP=${{ secrets.SERVER_IP }} >> .env
-          echo SERVER_SSH_KEY=${{ secrets.SERVER_SSH_KEY }} >> .env
+          
 
       # Validate .env file contents
       - name: Print .env file contents for debugging
