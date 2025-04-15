@@ -108,7 +108,7 @@ jobs:
       - name: SSH and deploy
         run: |
           sshpass ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.SERVER_IP }} \
-          "cd /home/ubuntu/esturio-backend; \
+          "cd /home/ec2-user/esturio-backend; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose down; \
            sudo docker image rm ghcr.io/elvisuriel/esturio-back:production; \
