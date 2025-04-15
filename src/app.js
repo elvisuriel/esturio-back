@@ -18,7 +18,12 @@ setupWebSocket(server); // Configura WebSocket
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://54.67.30.105:3001", "https://esturiofron.netlify.app", "http://localhost:3000", "https://landing.app.esturio.com"],
+    origin: [
+      "http://54.67.30.105:3001", // IP pública del servidor EC2
+      "https://esturiofron.netlify.app", // Frontend desplegado en Netlify
+      "http://localhost:3000", // Para desarrollo local
+      "https://landing.app.esturio.com", // Otro dominio de la app
+    ],
   })
 );
 app.use(express.json());
