@@ -104,11 +104,10 @@ jobs:
 
       - name: Copy files to server
         run: |
-          sshpass scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r esturio-backend ubuntu@${{ secrets.SERVER_IP }}:/home/ubuntu/
-
+          sshpass scp -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no -r esturio-backend ec2-user@${{ secrets.SERVER_IP }}:/home/ec2-user/
       - name: SSH and deploy
         run: |
-          sshpass ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
+          sshpass ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.SERVER_IP }} \
           "cd /home/ubuntu/esturio-backend; \
            sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
            sudo docker-compose down; \
