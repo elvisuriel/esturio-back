@@ -158,9 +158,9 @@ jobs:
 
       - name: SSH and deploy
         run: |
-          sshpass ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ubuntu@${{ secrets.SERVER_IP }} \
-          "cd /home/ubuntu/esturio-backend-dev; \
-           sudo docker login -u "${{ secrets.USER_NAME }}" -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:dev; \
-           sudo docker-compose down; \
-           sudo docker image rm ghcr.io/elvisuriel/esturio-back:dev; \
-           sudo docker-compose up -d;"
+          sshpass ssh -v -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no ec2-user@${{ secrets.SERVER_IP }} \
+          "cd /home/ec2-user/esturio-backend; \
+          sudo docker login -u ${{ secrets.USER_NAME }} -p ${{ secrets.DOCKER_PASSWORD }} ghcr.io/elvisuriel/esturio-back:production; \
+          sudo docker-compose down; \
+          sudo docker image rm ghcr.io/elvisuriel/esturio-back:production; \
+          sudo docker-compose up -d;"
