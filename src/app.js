@@ -14,6 +14,14 @@ const server = http.createServer(app);
 
 setupWebSocket(server); // Configura WebSocket
 
+// Redirige todas las solicitudes HTTP a HTTPS
+app.use((req, res, next) => {
+  if (req.protocol === 'http') {
+    return res.redirect(301, `https://${req.headers.host}${req.url}`);
+  }
+  next();
+});
+
 // Middleware y rutas
 app.use(cookieParser());
 app.use(
@@ -36,20 +44,19 @@ app.use((err, req, res, next) => {
   console.error("Error:", err.message);
   res.status(500).send("Error interno del servidor");
 });
+
+// Escuchar el puerto 3001 para HTTP
 server.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor en ejecución en http://0.0.0.0:${PORT}`);
 });
 
-
+// Ruta de prueba
 app.get("/", (req, res) => {
   res.json({ Hi: "Hello World" });
 });
+
+// Rutas API
 app.use("/api", routes);
 app.post("/api/upload", uploadFile);
-
-
-
-
-
 
 export default app;
