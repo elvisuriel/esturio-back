@@ -14,14 +14,6 @@ const server = http.createServer(app);
 
 setupWebSocket(server); // Configura WebSocket
 
-// Redirige todas las solicitudes HTTP a HTTPS
-app.use((req, res, next) => {
-  if (req.protocol === 'http') {
-    return res.redirect(301, `https://${req.headers.host}${req.url}`);
-  }
-  next();
-});
-
 // Middleware y rutas
 app.use(cookieParser());
 app.use(
@@ -32,9 +24,6 @@ app.use(
       "http://localhost:3000", // Para desarrollo local
       "https://landing.app.esturio.com", // Otro dominio de la app
     ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-    credentials: true,
   })
 );
 app.use(express.json());
