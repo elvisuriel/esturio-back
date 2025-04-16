@@ -32,6 +32,9 @@ app.use(
       "http://localhost:3000", // Para desarrollo local
       "https://landing.app.esturio.com", // Otro dominio de la app
     ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+    credentials: true,
   })
 );
 app.use(express.json());
