@@ -1,6 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
-import cookieParser from "cookie-parser";
+
 import cors from "cors";
 import http from "http";
 import { uploadFile } from "./controllers/uploadS3Controller.js";
@@ -14,8 +14,7 @@ const server = http.createServer(app);
 
 setupWebSocket(server); // Configura WebSocket
 
-// Middleware y rutas
-app.use(cookieParser());
+
 app.use(
   cors({
     origin: [
