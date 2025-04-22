@@ -18,6 +18,7 @@ setupWebSocket(server); // Configura WebSocket
 app.use(
   cors({
     origin: [
+      "http://esturio.com",
       "http://54.67.30.105:3001", // IP pública del servidor EC2
       "https://esturiofron.netlify.app", // Frontend desplegado en Netlify
       "http://localhost:3000", // Para desarrollo local
