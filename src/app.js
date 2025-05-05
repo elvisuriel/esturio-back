@@ -24,6 +24,7 @@ app.use(
       "https://esturiofron.netlify.app", // Frontend desplegado en Netlify
       "http://localhost:3000", // Para desarrollo local
       "https://landing.app.esturio.com", // Otro dominio de la app
+      "https://ominous-space-telegram-r54g97r7vqp35557-3000.app.github.dev"
     ],
   })
 );
